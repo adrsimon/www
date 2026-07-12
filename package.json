@@ -1,0 +1,21 @@
+{
+  "name": "adrsimon",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "@fontsource-variable/geist-mono": "^5.0.0",
+    "@fontsource-variable/inter": "^5.0.0",
+    "astro": "^5.0.0",
+    "astro-og-canvas": "^0.7.0",
+    "canvaskit-wasm": "^0.39.1"
+  },
+  "packageManager": "npm@11.11.0+sha512.f36811c4aae1fde639527368ae44c571d050006a608d67a191f195a801a52637a312d259186254aa3a3799b05335b7390539cf28656d18f0591a1125ba35f973"
+}

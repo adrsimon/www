@@ -1,0 +1,301 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const experiences = [
+  {
+    when: '2025–now',
+    role: 'software engineer',
+    org: 'dust',
+    href: 'https://dust.tt',
+    blurb: 'Core platform. Shipping across the full product surface, from new features to foundational infrastructure.',
+  },
+  {
+    when: '2024–25',
+    role: 'swe intern',
+    org: 'decathlon',
+    href: 'https://digital.decathlon.net',
+    blurb: 'Rental & Circularity. Built the CRM behind the sports equipment rental offering across Europe.',
+  },
+  {
+    when: '2023',
+    role: 'backend intern',
+    org: 'deezer',
+    href: 'https://www.deezer.com',
+    blurb: 'Core Product Team. Internal account systems and media tooling used daily by 300+ developers.',
+  },
+];
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toLowerCase();
+---
+
+<Base title="Adrien Simon" full>
+  <div class="home">
+    <section class="writings">
+      <p class="feed-label mono fade" style="--i: 4">writing</p>
+      <ul>
+        {
+          posts.map((post, i) => {
+            const external = post.data.external;
+            const href = external ?? `/posts/${post.id}/`;
+            return (
+              <li class="fade" style={`--i: ${i + 5}`}>
+                <a class="entry" href={href}>
+                  <span class="title" transition:name={external ? undefined : `title-${post.id}`}>
+                    {post.data.title}
+                  </span>
+                  <span class="meta mono">
+                    <span>{fmt(post.data.date)}</span>
+                    {external && (
+                      <span>
+                        {post.data.source ?? 'link'} <span class="arrow">↗</span>
+                      </span>
+                    )}
+                  </span>
+                  {post.data.description && <span class="desc">{post.data.description}</span>}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+
+    <aside class="work">
+      <div class="halves">
+        <div class="exp">
+          <p class="feed-label mono fade" style="--i: 2">life</p>
+          <ul>
+            {
+              experiences.map((e, i) => (
+                <li class="fade" style={`--i: ${i + 3}`}>
+                  <p class="when mono">{e.when}</p>
+                  <p class="what">
+                    {e.role} @{' '}
+                    <a class="u ext" href={e.href}>
+                      {e.org}
+                    </a>
+                  </p>
+                  <p class="blurb">{e.blurb}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <header class="me">
+          <img
+            class="fade"
+            style="--i: 0"
+            src="https://avatars.githubusercontent.com/u/99071153?v=4"
+            alt="Adrien Simon"
+            width="112"
+            height="112"
+          />
+          <h1 class="fade" style="--i: 0">Adrien Simon</h1>
+          <p class="role mono fade" style="--i: 1">
+            building agents @ <a class="u ext" href="https://dust.tt">dust</a>
+          </p>
+          <div class="contact mono fade" style="--i: 2">
+            <a class="u" href="mailto:adrien@dust.tt">adrien@dust.tt</a>
+            <span>📍 paris, fr</span>
+          </div>
+          <nav class="links mono fade" style="--i: 3">
+            <p class="feed-label mono">over the internet</p>
+            <a class="u ext" href="https://github.com/adrsimon">gh</a>
+            <a class="u ext" href="https://www.linkedin.com/in/adrsimon">in</a>
+            <a class="u" href="/rss.xml">rss</a>
+          </nav>
+        </header>
+      </div>
+
+      <footer class="mono fade" style="--i: 6">{new Date().getFullYear()} adrsimon</footer>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .home {
+    text-transform: lowercase;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    height: 100dvh;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+
+  .writings {
+    grid-column: 1 / span 4;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: clamp(3rem, 12vh, 7rem) 0.25rem 3rem 0;
+  }
+  .writings::-webkit-scrollbar {
+    display: none;
+  }
+
+  .writings ul {
+    list-style: none;
+    padding: 0;
+  }
+  .writings li + li {
+    border-top: 1px solid var(--border);
+  }
+
+  .entry {
+    display: block;
+    padding: 1.1rem 0;
+  }
+  .entry .title {
+    display: block;
+    font-weight: 520;
+    letter-spacing: -0.01em;
+    transition: transform 0.2s ease;
+  }
+  .entry .meta {
+    display: flex;
+    gap: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    transition: color 0.2s ease;
+  }
+  .entry .arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .entry .desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.55rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .entry:hover .title {
+    transform: translateX(4px);
+  }
+  .entry:hover .meta {
+    color: var(--accent);
+  }
+  .entry:hover .arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .work {
+    grid-column: 6 / span 7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(3rem, 12vh, 7rem) 0 2rem;
+    min-height: 0;
+  }
+
+  .halves {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .exp ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .exp .when {
+    color: var(--faint);
+  }
+  .exp .what {
+    font-weight: 520;
+    margin-top: 0.15rem;
+  }
+  .exp .blurb {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  .me img {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+  }
+  .me h1 {
+    font-size: 1.375rem;
+    font-weight: 640;
+    letter-spacing: -0.02em;
+  }
+  .me .role {
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .me .contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-top: 0.9rem;
+    color: var(--muted);
+  }
+  .me .links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    color: var(--muted);
+  }
+  .me .links .feed-label {
+    margin-bottom: 0.4rem;
+  }
+
+  .work footer {
+    margin-top: auto;
+    padding-top: 2rem;
+    border: none;
+    display: block;
+    color: var(--faint);
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .home {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      padding: 3rem 1.5rem 2rem;
+      gap: 3rem;
+    }
+    .work {
+      order: -1;
+      padding: 0;
+    }
+    .halves {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .me {
+      order: -1;
+    }
+    .writings {
+      overflow: visible;
+      padding: 0;
+    }
+    .work footer {
+      text-align: left;
+      padding-top: 0;
+    }
+  }
+</style>

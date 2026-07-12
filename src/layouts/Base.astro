@@ -1,0 +1,161 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/geist-mono';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  full?: boolean;
+}
+
+const {
+  title,
+  description = 'Adrien Simon, building agents @ dust. Essays on AI agents and engineering.',
+  ogImage = '/og/index.png',
+  full = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Adrien Simon" href="/rss.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <ClientRouter />
+
+    <script is:inline>
+      const applyTheme = () => {
+        const stored = localStorage.getItem('theme');
+        const theme =
+          stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      };
+      applyTheme();
+      document.addEventListener('astro:after-swap', () => {
+        applyTheme();
+        // entrance stagger is for hard loads only, it fights the
+        // view transition on client-side navigations
+        document.documentElement.classList.add('navigated');
+      });
+    </script>
+  </head>
+  <body>
+    <button class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <svg
+        class="moon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+      <svg
+        class="sun"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="4"></circle>
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        ></path>
+      </svg>
+    </button>
+    {
+      full ? (
+        <slot />
+      ) : (
+        <div class="wrap">
+          <slot />
+          <footer class="mono">{new Date().getFullYear()} adrsimon</footer>
+        </div>
+      )
+    }
+
+    <script>
+      function initToggle() {
+        const btn = document.querySelector<HTMLButtonElement>('.theme-toggle');
+        btn?.addEventListener('click', () => {
+          const root = document.documentElement;
+          const toDark = root.dataset.theme !== 'dark';
+          const apply = () => {
+            root.dataset.theme = toDark ? 'dark' : 'light';
+            localStorage.setItem('theme', root.dataset.theme);
+          };
+
+          if (
+            !document.startViewTransition ||
+            matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            apply();
+            return;
+          }
+
+          const rect = btn.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+          const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+          // Pre-clip via CSS: the snapshot paints before vt.ready resolves.
+          root.style.setProperty('--vt-x', `${x}px`);
+          root.style.setProperty('--vt-y', `${y}px`);
+          root.classList.add('theming', toDark ? 'theming-in' : 'theming-out');
+
+          const vt = document.startViewTransition(apply);
+          let anim: Animation | undefined;
+          vt.ready.then(() => {
+            const clip = [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`];
+            anim = root.animate(
+              { clipPath: toDark ? clip : [...clip].reverse() },
+              {
+                duration: 500,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                // forwards: the last frame flashes unclipped otherwise
+                fill: 'forwards',
+                pseudoElement: toDark
+                  ? '::view-transition-new(root)'
+                  : '::view-transition-old(root)',
+              }
+            );
+          });
+          vt.finished.finally(() => {
+            // a filling animation would re-clip the next transition's pseudos
+            anim?.cancel();
+            root.classList.remove('theming', 'theming-in', 'theming-out');
+          });
+        });
+      }
+      document.addEventListener('astro:page-load', initToggle);
+    </script>
+  </body>
+</html>

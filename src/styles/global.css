@@ -1,0 +1,368 @@
+:root {
+  --bg: #fafafa;
+  --fg: #16161a;
+  --muted: #71717a;
+  --faint: #a1a1aa;
+  --accent: #f00c57;
+  --border: rgba(22, 22, 26, 0.1);
+  --card: #ffffff;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+  --sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+html[data-theme='dark'] {
+  --bg: #0c0c0e;
+  --fg: #ededf0;
+  --muted: #8f8f98;
+  --faint: #5c5c66;
+  --border: rgba(237, 237, 240, 0.12);
+  --card: #141417;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  color-scheme: light;
+  scrollbar-gutter: stable;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 10vh, 6rem) 1.5rem 4rem;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.u {
+  background-image: linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--border), var(--border));
+  background-repeat: no-repeat;
+  background-position: 0 100%, 0 100%;
+  background-size: 0% 1.5px, 100% 1px;
+  transition: background-size 0.25s ease, color 0.15s ease;
+}
+.u:hover,
+.u:focus-visible {
+  background-size: 100% 1.5px, 100% 1px;
+  color: var(--accent);
+}
+
+.ext::after {
+  content: '↗';
+  font-family: var(--mono);
+  font-size: 0.75em;
+  margin-left: 0.3em;
+  display: inline-block;
+  color: var(--muted);
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+.ext:hover::after,
+.ext:focus-visible::after {
+  color: var(--accent);
+  transform: translate(1px, -1px);
+}
+
+.site-head h1 {
+  font-size: 1.375rem;
+  font-weight: 640;
+  letter-spacing: -0.02em;
+}
+
+.site-head .role {
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.links {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 1.1rem;
+  color: var(--muted);
+}
+.links .sep {
+  color: var(--faint);
+  user-select: none;
+}
+
+.feed {
+  margin-top: 3.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.feed-label {
+  color: var(--faint);
+  margin-bottom: 0.75rem;
+}
+
+.feed li + li {
+  border-top: 1px solid var(--border);
+}
+
+.post-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.8rem 0;
+}
+
+.post-row .title {
+  font-weight: 480;
+  transition: transform 0.2s ease;
+}
+
+.post-row .meta {
+  color: var(--muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  transition: color 0.2s ease;
+}
+
+.post-row .arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.post-row:hover .title {
+  transform: translateX(4px);
+}
+.post-row:hover .meta {
+  color: var(--accent);
+}
+.post-row:hover .arrow {
+  transform: translate(2px, -2px);
+}
+
+/* lowercase the chrome, keep body prose as written */
+.post-head,
+.back,
+.prose h2,
+.prose h3 {
+  text-transform: lowercase;
+}
+
+.post-head .date {
+  color: var(--muted);
+}
+
+.post-head h1 {
+  font-size: 1.75rem;
+  font-weight: 640;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin-top: 0.4rem;
+}
+
+.back {
+  color: var(--muted);
+  display: inline-block;
+  margin-bottom: 2.5rem;
+}
+
+.prose {
+  margin-top: 2rem;
+}
+.prose > * + * {
+  margin-top: 1.1em;
+}
+.prose h2 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  margin-top: 2em;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  margin-top: 1.8em;
+}
+.prose a {
+  background-image: linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--border), var(--border));
+  background-repeat: no-repeat;
+  background-position: 0 100%, 0 100%;
+  background-size: 0% 1.5px, 100% 1px;
+  transition: background-size 0.25s ease, color 0.15s ease;
+}
+.prose a:hover,
+.prose a:focus-visible {
+  background-size: 100% 1.5px, 100% 1px;
+  color: var(--accent);
+}
+.prose a[href^='http']::after {
+  content: '↗';
+  font-family: var(--mono);
+  font-size: 0.75em;
+  margin-left: 0.3em;
+  display: inline-block;
+  color: var(--muted);
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+.prose a[href^='http']:hover::after {
+  color: var(--accent);
+  transform: translate(1px, -1px);
+}
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8125rem;
+}
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--muted);
+}
+.prose img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.prose table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.prose th {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-align: left;
+  text-transform: lowercase;
+}
+.prose th,
+.prose td {
+  padding: 0.5rem 1.25rem 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+footer {
+  margin-top: 5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.1rem;
+  z-index: 20;
+  background: none;
+  border: none;
+  color: var(--faint);
+  cursor: pointer;
+  padding: 0.4rem;
+  line-height: 0;
+  transition: color 0.15s ease, transform 0.3s ease;
+}
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+  display: none;
+}
+html:not([data-theme='dark']) .theme-toggle .moon {
+  display: block;
+}
+html[data-theme='dark'] .theme-toggle .sun {
+  display: block;
+}
+.theme-toggle:hover {
+  color: var(--accent);
+  transform: rotate(40deg);
+}
+
+/* scoped to .theming so navigation view transitions keep their fade */
+html.theming::view-transition-old(root),
+html.theming::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theming-in::view-transition-new(root) {
+  clip-path: circle(0px at var(--vt-x) var(--vt-y));
+}
+html.theming-out::view-transition-old(root) {
+  z-index: 1;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade {
+  animation: fade-up 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+html.navigated .fade {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

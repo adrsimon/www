@@ -2,6 +2,8 @@
   "name": "www",
   "compatibility_date": "2026-07-12",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // without this, an unknown path gets a bare worker 404, not /404.html
+    "not_found_handling": "404-page"
   }
 }

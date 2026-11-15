@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toLowerCase();
+---
+
+<!-- full: this page owns its own wrapper so the footer can sit at the bottom -->
+<Base title="404 · Adrien Simon" description="Page not found." full>
+  <div class="page">
+    <a class="back mono u fade" style="--i: 0" href="/">← adrsimon</a>
+
+    <main>
+      <h1 class="fade" style="--i: 1">nothing here</h1>
+      <p class="lede fade" style="--i: 2">check out latest work</p>
+
+      <ul class="feed fade" style="--i: 3">
+        {
+          posts.map((post) => {
+            const external = post.data.external;
+            return (
+              <li>
+                <a class="post-row" href={external ?? `/posts/${post.id}/`}>
+                  <span class="title">{post.data.title}</span>
+                  <span class="meta mono">
+                    <span>{fmt(post.data.date)}</span>
+                    {external && <span class="arrow">↗</span>}
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </main>
+
+    <footer class="mono fade" style="--i: 4">{new Date().getFullYear()} adrsimon</footer>
+  </div>
+</Base>
+
+<style>
+  .page {
+    min-height: 100dvh;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 10vh, 6rem) 1.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    /* auto both sides: the block floats in the middle of whatever is left */
+    margin: auto 0;
+    padding: 3rem 0;
+  }
+
+  /* the index feed lowercases titles; match it */
+  .back,
+  h1,
+  .feed {
+    text-transform: lowercase;
+  }
+
+  .back {
+    /* a flex child would stretch, dragging the underline across the page */
+    align-self: flex-start;
+    margin-bottom: 0;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 640;
+    letter-spacing: -0.025em;
+  }
+
+  .lede {
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  .feed {
+    margin-top: 3.5rem;
+  }
+
+  footer {
+    margin-top: auto;
+  }
+</style>

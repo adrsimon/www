@@ -37,12 +37,30 @@ const fmt = (d: Date) =>
 <Base title="Adrien Simon" full>
   <div class="home">
     <section class="writings">
-      <p class="feed-label mono fade" style="--i: 4">writing</p>
+      <p class="feed-label mono fade" style="--i: 4">works</p>
       <ul>
         {
           posts.map((post, i) => {
             const external = post.data.external;
             const href = external ?? `/posts/${post.id}/`;
+            if (post.data.kind === 'project') {
+              return (
+                <li class="fade" style={`--i: ${i + 5}`}>
+                  <a class="entry project" href={href}>
+                    <span class="line">
+                      <span class="title">{post.data.title}</span>
+                      <span class="meta mono">
+                        <span>{fmt(post.data.date)}</span>
+                        <span>
+                          {post.data.source ?? 'link'} <span class="arrow">↗</span>
+                        </span>
+                      </span>
+                    </span>
+                    {post.data.description && <span class="desc">{post.data.description}</span>}
+                  </a>
+                </li>
+              );
+            }
             return (
               <li class="fade" style={`--i: ${i + 5}`}>
                 <a class="entry" href={href}>
@@ -144,8 +162,15 @@ const fmt = (d: Date) =>
     list-style: none;
     padding: 0;
   }
+  .writings li {
+    transition: opacity 0.2s ease;
+  }
   .writings li + li {
     border-top: 1px solid var(--border);
+  }
+  /* spotlight: dim the rest of the list around the focused entry */
+  .writings ul:has(.entry:focus-visible) > li:not(:has(.entry:focus-visible)) {
+    opacity: 0.45;
   }
 
   .entry {
@@ -179,14 +204,35 @@ const fmt = (d: Date) =>
     line-height: 1.55;
     color: var(--muted);
   }
-  .entry:hover .title {
-    transform: translateX(4px);
+  .entry.project {
+    padding: 0.75rem 0;
   }
-  .entry:hover .meta {
-    color: var(--accent);
+  .entry.project .line {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
   }
-  .entry:hover .arrow {
-    transform: translate(2px, -2px);
+  .entry.project .meta {
+    margin-top: 0;
+  }
+  .entry.project .desc {
+    -webkit-line-clamp: 1;
+    margin-top: 0.2rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .writings ul:has(> li:hover) > li:not(:hover) {
+      opacity: 0.45;
+    }
+    .entry:hover .title {
+      transform: translateX(4px);
+    }
+    .entry:hover .meta {
+      color: var(--accent);
+    }
+    .entry:hover .arrow {
+      transform: translate(2px, -2px);
+    }
   }
 
   .work {

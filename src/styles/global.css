@@ -65,14 +65,22 @@ a {
   background-image: linear-gradient(var(--accent), var(--accent)),
     linear-gradient(var(--border), var(--border));
   background-repeat: no-repeat;
-  background-position: 0 100%, 0 100%;
+  /* accent rests on the right so it draws in from the left and exits right */
+  background-position: 100% 100%, 0 100%;
   background-size: 0% 1.5px, 100% 1px;
   transition: background-size 0.25s ease, color 0.15s ease;
 }
-.u:hover,
 .u:focus-visible {
+  background-position: 0 100%, 0 100%;
   background-size: 100% 1.5px, 100% 1px;
   color: var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .u:hover {
+    background-position: 0 100%, 0 100%;
+    background-size: 100% 1.5px, 100% 1px;
+    color: var(--accent);
+  }
 }
 
 .ext::after {
@@ -84,10 +92,15 @@ a {
   color: var(--muted);
   transition: color 0.15s ease, transform 0.2s ease;
 }
-.ext:hover::after,
 .ext:focus-visible::after {
   color: var(--accent);
   transform: translate(1px, -1px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ext:hover::after {
+    color: var(--accent);
+    transform: translate(1px, -1px);
+  }
 }
 
 .site-head h1 {
@@ -155,14 +168,16 @@ a {
   transition: transform 0.2s ease;
 }
 
-.post-row:hover .title {
-  transform: translateX(4px);
-}
-.post-row:hover .meta {
-  color: var(--accent);
-}
-.post-row:hover .arrow {
-  transform: translate(2px, -2px);
+@media (hover: hover) and (pointer: fine) {
+  .post-row:hover .title {
+    transform: translateX(4px);
+  }
+  .post-row:hover .meta {
+    color: var(--accent);
+  }
+  .post-row:hover .arrow {
+    transform: translate(2px, -2px);
+  }
 }
 
 /* lowercase the chrome, keep body prose as written */
@@ -210,14 +225,21 @@ a {
   background-image: linear-gradient(var(--accent), var(--accent)),
     linear-gradient(var(--border), var(--border));
   background-repeat: no-repeat;
-  background-position: 0 100%, 0 100%;
+  background-position: 100% 100%, 0 100%;
   background-size: 0% 1.5px, 100% 1px;
   transition: background-size 0.25s ease, color 0.15s ease;
 }
-.prose a:hover,
 .prose a:focus-visible {
+  background-position: 0 100%, 0 100%;
   background-size: 100% 1.5px, 100% 1px;
   color: var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .prose a:hover {
+    background-position: 0 100%, 0 100%;
+    background-size: 100% 1.5px, 100% 1px;
+    color: var(--accent);
+  }
 }
 .prose a[href^='http']::after {
   content: '↗';
@@ -228,9 +250,11 @@ a {
   color: var(--muted);
   transition: color 0.15s ease, transform 0.2s ease;
 }
-.prose a[href^='http']:hover::after {
-  color: var(--accent);
-  transform: translate(1px, -1px);
+@media (hover: hover) and (pointer: fine) {
+  .prose a[href^='http']:hover::after {
+    color: var(--accent);
+    transform: translate(1px, -1px);
+  }
 }
 .prose code {
   font-family: var(--mono);
@@ -319,9 +343,11 @@ html:not([data-theme='dark']) .theme-toggle .moon {
 html[data-theme='dark'] .theme-toggle .sun {
   display: block;
 }
-.theme-toggle:hover {
-  color: var(--accent);
-  transform: rotate(40deg);
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover {
+    color: var(--accent);
+    transform: rotate(40deg);
+  }
 }
 
 /* scoped to .theming so navigation view transitions keep their fade */

@@ -11,6 +11,8 @@ const posts = defineCollection({
     external: z.string().url().optional(),
     // Short label shown next to external posts, e.g. "dust.tt".
     source: z.string().optional(),
+    // Projects render as a compact one-liner in the feed instead of a full entry.
+    kind: z.enum(['post', 'project']).default('post'),
     draft: z.boolean().default(false),
   }),
 });

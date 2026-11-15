@@ -22,7 +22,9 @@ const fmt = post.data.date
 >
   <a class="back mono u fade" style="--i: 0" href="/">← adrsimon</a>
   <header class="post-head">
-    <p class="date mono fade" style="--i: 1">{fmt}</p>
+    <p class="date mono fade" style="--i: 1">
+      {[fmt, [post.data.event, post.data.location].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}
+    </p>
     <h1 class="fade" style="--i: 2" transition:name={`title-${post.id}`}>{post.data.title}</h1>
   </header>
   <article class="prose fade" style="--i: 3">

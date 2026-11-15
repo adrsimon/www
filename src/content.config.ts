@@ -12,7 +12,10 @@ const posts = defineCollection({
     // Short label shown next to external posts, e.g. "dust.tt".
     source: z.string().optional(),
     // Projects render as a compact one-liner in the feed instead of a full entry.
-    kind: z.enum(['post', 'project']).default('post'),
+    // Talks get their own page, with the event in the meta line.
+    kind: z.enum(['post', 'project', 'talk']).default('post'),
+    event: z.string().optional(),
+    location: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

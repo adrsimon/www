@@ -392,3 +392,13 @@ html.navigated .fade {
     transition-duration: 0.01ms !important;
   }
 }
+/* two portrait photos side by side, so they don't each take a full screen */
+.prose .pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.prose .pair img {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}

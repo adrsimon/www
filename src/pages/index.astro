@@ -69,6 +69,7 @@ const fmt = (d: Date) =>
                   </span>
                   <span class="meta mono">
                     <span>{fmt(post.data.date)}</span>
+                    {post.data.kind === 'talk' && <span>talk{post.data.event && ` · ${post.data.event}`}</span>}
                     {external && (
                       <span>
                         {post.data.source ?? 'link'} <span class="arrow">↗</span>
